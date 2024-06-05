@@ -30,6 +30,30 @@ def calculate_base_rates(coins) -> dict:
     return base_rates
 
 
+def solve(amount_required, coins) -> int:
+    result = 1
+    coin_value_to_decrease_count_of = int()
+    total_number_of_coins = sum(coins.values())
+
+    # todo: incorrect conditional. result is an odd such as 0 <= x <= 1.
+    while result < amount_required:
+
+        for coin_value, coin_count in coins.items():
+            odd = calculate_odds(coin_count, total_number_of_coins)
+            coin_value_to_decrease_count_of = coin_value
+            result *= odd
+
+        # Decrease the coin count of the specific coin value by one
+        coins[coin_value_to_decrease_count_of] -= 1
+
+        # if < 1, remove the key altogether
+        if coins[coin_value_to_decrease_count_of] < 1:
+            coins.pop(coin_value_to_decrease_count_of)
+
+    return result
+
+
+
 '''def calculate_expected_value(coin_values, distribution) -> float:
     current_odds = float()
 
@@ -42,13 +66,14 @@ def calculate_base_rates(coins) -> dict:
 def main():
 
     coins = {
-        1: 2,
-        2: 4,
+        0.5: 2,
+        2: 1,
     }
 
     base_rates = calculate_base_rates(coins)
 
-    print(base_rates)
+    amount = 1
+    print(solve(amount, coins))
 
 
 if __name__ == "__main__":
